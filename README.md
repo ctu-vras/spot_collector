@@ -1,6 +1,8 @@
 # spot_collector
 ROS package for using the Boston Dynamics Spot equiped with the Spot arm for collecting objects placed on the ground around it.
 
+This package requires a [custom version](https://github.com/ctu-vras/spot_ros/tree/dev) of the ROS driver for Spot
+
 ## Usage
 On the computer connected to the robot, use
 
