@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(spot_garbage_collector)
+project(spot_collector)
 
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
@@ -32,7 +32,7 @@ generate_messages(
 
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES spot_garbage_collector
+#  LIBRARIES spot_collector
 #  CATKIN_DEPENDS rospy std_msgs
   DEPENDS Eigen
 )

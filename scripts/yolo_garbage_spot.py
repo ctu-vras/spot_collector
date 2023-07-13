@@ -19,7 +19,7 @@ bridge = CvBridge()
 # model = YOLO('yolov8n-seg.pt')
 # model = YOLO('yolov8n.pt')
 rospack = rospkg.RosPack()
-path = rospack.get_path('spot_garbage_collector')+'/scripts/'
+path = rospack.get_path('spot_collector')+'/scripts/'
 model = YOLO(path+'best.pt') 
 current_frame = []
 

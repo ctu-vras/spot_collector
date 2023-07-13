@@ -31,7 +31,7 @@ from interactive_markers.interactive_marker_server import *
 from visualization_msgs.msg import *
 from geometry_msgs.msg import Point
 
-from spot_garbage_collector.srv import MultiGrasp, MultiGraspRequest
+from spot_collector.srv import MultiGrasp, MultiGraspRequest
 
 
 from optimize_route import *
