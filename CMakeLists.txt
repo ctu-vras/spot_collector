@@ -43,6 +43,15 @@ include_directories(
   ${Eigen_INCLUDE_DIRS}
 )
 
+catkin_install_python(PROGRAMS
+    scripts/cloud2grid.py
+    scripts/Interf_real_time.py
+    scripts/move_spot_pose.py
+    scripts/pick_place_srv.py
+    scripts/yolo_garbage_spot.py
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
 add_executable(lidar_filter src/lidar_filter.cpp)
 target_link_libraries(lidar_filter ${catkin_LIBRARIES})
 
