@@ -54,7 +54,6 @@ void Filter::callback(const sensor_msgs::PointCloud2ConstPtr& msg, sensor_msgs::
     }
 
     //transform PointCloud2 to body frame
-    sensor_msgs::PointCloud2 cloud_out;
     geometry_msgs::TransformStamped transform;
     try{
         transform = tfBuffer_p->lookupTransform("body", msg->header.frame_id, msg->header.stamp);
@@ -84,26 +83,31 @@ void Filter::callback_tim(const ros::TimerEvent&) {
         pcl::PCLPointCloud2* cloud = new pcl::PCLPointCloud2;
         pcl_conversions::toPCL(*cloud_fl, *cloud);
         *cloud_cat += *cloud;
+        delete cloud;
     }
     if (*fr_received){
         pcl::PCLPointCloud2* cloud = new pcl::PCLPointCloud2;
         pcl_conversions::toPCL(*cloud_fr, *cloud);
         *cloud_cat += *cloud;
+        delete cloud;
     }
     if (*l_received){
         pcl::PCLPointCloud2* cloud = new pcl::PCLPointCloud2;
         pcl_conversions::toPCL(*cloud_l, *cloud);
         *cloud_cat += *cloud;
+        delete cloud;
     }
     if (*r_received){
         pcl::PCLPointCloud2* cloud = new pcl::PCLPointCloud2;
         pcl_conversions::toPCL(*cloud_r, *cloud);
         *cloud_cat += *cloud;
+        delete cloud;
     }
     if (*b_received){
         pcl::PCLPointCloud2* cloud = new pcl::PCLPointCloud2;
         pcl_conversions::toPCL(*cloud_b, *cloud);
         *cloud_cat += *cloud;
+        delete cloud;
     }
     
     // Perform the actual filtering
@@ -113,6 +117,7 @@ void Filter::callback_tim(const ros::TimerEvent&) {
     sor.setInputCloud(cloudPtr);
     sor.setLeafSize(0.05, 0.05, 0.02);
     sor.filter(*cloud_filtered);
+    cloudPtr.reset();
 
     // Crop with bounding box
     geometry_msgs::TransformStamped transform;
@@ -130,6 +135,7 @@ void Filter::callback_tim(const ros::TimerEvent&) {
     bbox.setMax(Eigen::Vector4f(3.0, 3.0, 1.2-z_off, 1.0));
     bbox.setInputCloud(cloudPtr2);
     bbox.filter(cloud_cropped);
+    cloudPtr2.reset();
 
     // Convert to ROS data type
     sensor_msgs::PointCloud2 output;
