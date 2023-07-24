@@ -412,7 +412,7 @@ def talker():
     # subscriber to float32
     rospy.Subscriber('finish_grasp', Float32, callback_finish_grasp)
 
-    bcut = Button(axcut, 'Get Clusters', color='white', hovercolor='green')
+    bcut = Button(axcut, 'Cluster Object Points', color='white', hovercolor='green')
     bcut.on_clicked(_save_param)
 
     bcut_2 = Button(axcut_2, 'Save Point Cloud', color='white', hovercolor='green')
@@ -421,13 +421,13 @@ def talker():
     bcut_3 = Button(extract_soil, 'Remove ground', color='white', hovercolor='green')
     bcut_3.on_clicked(_extract_soil)
 
-    bcut_4 = Button(pub_mark, 'Send Grasp Object', color='white', hovercolor='red')
+    bcut_4 = Button(pub_mark, 'Send Grasp Command', color='white', hovercolor='red')
     bcut_4.on_clicked(_pub_mark)
 
     bcut_5 = Button(pub_arm_pose, 'Pub Pose Arm Inspect', color='white', hovercolor='red')
     bcut_5.on_clicked(_pub_arm_pose)
 
-    bcut_6 = Button(get_optimal_order, 'Get Optimal Sequence', color='white', hovercolor='yellow')
+    bcut_6 = Button(get_optimal_order, 'Order Objects for Grasping', color='white', hovercolor='yellow')
     bcut_6.on_clicked(_get_optimal_order)
 
     sub_LPCL = rospy.Subscriber("/points/filtered2", PointCloud2, callback_L_PC)
