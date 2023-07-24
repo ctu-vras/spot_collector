@@ -418,7 +418,7 @@ def talker():
     bcut_2 = Button(axcut_2, 'Save Point Cloud', color='white', hovercolor='green')
     bcut_2.on_clicked(_save_point_cloud)
 
-    bcut_3 = Button(extract_soil, 'Extract Soil', color='white', hovercolor='green')
+    bcut_3 = Button(extract_soil, 'Remove ground', color='white', hovercolor='green')
     bcut_3.on_clicked(_extract_soil)
 
     bcut_4 = Button(pub_mark, 'Send Grasp Object', color='white', hovercolor='red')
