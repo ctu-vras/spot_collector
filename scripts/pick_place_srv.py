@@ -11,6 +11,27 @@ from spot_collector.srv import MultiGrasp, MultiGraspResponse
 from spot_msgs.srv import Grasp3d, Grasp3dRequest
 import time
 import numpy as np
+from scipy.spatial.transform import Rotation as R
+from scipy.spatial.transform import Slerp
+
+
+N_POINTS = 10
+
+
+def quat_interp(q1, q2, q3, N, N3):
+    """slerp quaternion interpolation"""
+    r1 = R.from_quat([q1.x, q1.y, q1.z, q1.w])
+    r2 = R.from_quat([q2.x, q2.y, q2.z, q2.w])
+    r3 = R.from_quat([q3.x, q3.y, q3.z, q3.w])
+    times = np.arange(0,N)
+    key_rots = R.from_quat([r1.as_quat(), r2.as_quat(), r3.as_quat()])
+    slerp = Slerp([0,N3-1,N-1], key_rots)
+    interp_rots = slerp(times)
+    out = []
+    for r in interp_rots:
+        q = r.as_quat()
+        out += [Quaternion(q[0],q[1],q[2],q[3])]
+    return out
 
 
 class PickPlace:
@@ -18,25 +39,29 @@ class PickPlace:
         rospy.init_node("multi_pick_and_place")
 
         # generate circle arm trajectory from carry to container
-        q = Quaternion(0.0, 0.7209864258766174, 0.0, 0.6929491758346558)
-        p1 = np.array([[0.6494148373603821], [0.0], [0.42276856303215027]])  # start - close to the carry position
-        p3 = np.array([[-0.22189830243587494], [0.02764293923974037], [0.42276856303215027]])  # end - above the container
-        self.traj = [Pose(Point(p1[0, 0], p1[1, 0], p1[2, 0]), q)]
+        # use 3 quaternions to force the arm to rotate counterclockwise to avoid limit of the first joint
+        q1 = Quaternion(0.7284430861473083, 0.017499305307865143, -0.03009978123009205, 0.684222936630249)
+        q2 = Quaternion(-0.25776058435440063, -0.6635450124740601, 0.6546700596809387, 0.25431299209594727)
+        q3 = Quaternion(0.15078383684158325, -0.6926872134208679, 0.6872392296791077, -0.15859219431877136)
+        p1 = np.array([[0.8762252330780029], [0.0], [0.6058109402656555]])  # start - close to the carry position
+        p3 = np.array([[-0.2871779799461365], [0.023444153368473053], [0.6058109402656555]])  # end - above the container
+        self.traj = [Pose(Point(p1[0, 0], p1[1, 0], p1[2, 0]), q1)]
         center = (p1+p3)/2
         center[1, 0] = 0.  # keep the center aligned with the body axis
         p1_s = p1 - center
         p3_s = p3 - center
         norm = np.array([[0], [0], [1]])
         angle = float(np.arctan2(np.matmul(np.cross(p1_s, p3_s, axis=0).T, norm), np.matmul(p1_s.T, p3_s)))
-        angle_inc = angle/10
+        angle_inc = angle/(N_POINTS-1)
         s = np.sin(angle_inc)
         c = np.cos(angle_inc)
         rot = np.array([[c, -s, 0], [s, c, 0], [0, 0, 1]])
         point = p1_s
-        for i in range(10):
+        q_int = quat_interp(q1, q2, q3, N_POINTS, 7)
+        for i in range(N_POINTS-1):
             point = np.matmul(rot, point)
             tmp = point + center
-            self.traj += [Pose(Point(tmp[0, 0], tmp[1, 0], tmp[2, 0]), q)]
+            self.traj += [Pose(Point(tmp[0, 0], tmp[1, 0], tmp[2, 0]), q_int[i+1])]
 
         self.pickup_proxy = rospy.ServiceProxy('/spot/grasp_3d', Grasp3d)
         self.trajectory_proxy = rospy.ServiceProxy('/spot/arm_cartesian_trajectory', ArmCartesianTrajectory)
