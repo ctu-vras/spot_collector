@@ -93,6 +93,8 @@ class PickPlace:
                 resp = self.trajectory_proxy(r)
                 if not resp.success:
                     self.trajectory_fallback(True)
+                    abort = True
+                    break
 
                 # open the gripper
                 self.open_proxy(TriggerRequest())
@@ -107,6 +109,8 @@ class PickPlace:
                 resp = self.trajectory_proxy(r)
                 if not resp.success:
                     self.trajectory_fallback(False)
+                    abort = True
+                    break
 
                 self.close_proxy()
                 self.stow_proxy()
