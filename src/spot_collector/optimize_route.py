@@ -13,7 +13,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-from lib_opt_traj import *
+from spot_collector.lib_opt_traj import *
 
 # Define the parameters for the genetic algorithm
 POPULATION_SIZE = 300

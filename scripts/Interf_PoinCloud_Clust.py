@@ -22,7 +22,7 @@ import open3d as o3d
 from sklearn.cluster import KMeans, DBSCAN
 from sklearn.preprocessing import StandardScaler
 
-from lib_plot_TFs_real import *
+from spot_collector.lib_plot_TFs_real import *
 #from lib_plot_TFs_sim import *
 
 from scipy.cluster.vq import kmeans,vq
@@ -34,7 +34,7 @@ from geometry_msgs.msg import Point
 from spot_collector.srv import MultiGrasp, MultiGraspRequest
 
 
-from optimize_route import *
+from spot_collector.optimize_route import *
 
 
 pcd_temp = o3d.io.read_point_cloud("/home/robot/christyan/PoinClouds/PoinCLoud_spot_five_cameras_30.pcd")

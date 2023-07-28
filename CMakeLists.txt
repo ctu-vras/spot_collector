@@ -20,6 +20,8 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system)
 
+catkin_python_setup()
+
 add_service_files(
   FILES
   MultiGrasp.srv
