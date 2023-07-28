@@ -207,7 +207,7 @@ def _pub_mark(event):
 
 def _extract_soil(event):
 
-    global pcd_4_pub, pcd_temp
+    global pcd_4_pub, pcd_temp, pcl_pub
     plane_model, inliers = pcd_4_pub.segment_plane(distance_threshold=0.02,
                                          ransac_n=4,
                                          num_iterations=1000)
@@ -215,7 +215,15 @@ def _extract_soil(event):
     inlier_cloud = pcd_4_pub.select_by_index(inliers)
     inlier_cloud.paint_uniform_color([1.0, 0, 0])
     outlier_cloud = pcd_4_pub.select_by_index(inliers, invert=True)
-    pcd_temp = outlier_cloud
+    pcd_4_pub = outlier_cloud
+
+    # publish the cloud
+    header = std_msgs.msg.Header()
+    header.stamp = rospy.Time.now()
+    header.frame_id = 'vision'
+    scaled_polygon_pcl = pc2.create_cloud_xyz32(header, outlier_cloud.points)
+
+    pcl_pub.publish(scaled_polygon_pcl)
     
 def generate_random_color():
     return np.random.uniform(0, 1, 3)
@@ -241,8 +249,8 @@ def _save_param(event):
 
     # Clustering KMEANS:
     #model = KMeans(n_clusters= num_klusters,  max_iter=100, init='random')
-    model = KMeans(n_clusters= num_klusters, n_init=10, random_state=1)
-    model.fit(points)
+    # model = KMeans(n_clusters= num_klusters, n_init=10, random_state=1)
+    # model.fit(points)
 
     # --------------------------------------------------------------------------------------------
     # Perform DBSCAN clustering
