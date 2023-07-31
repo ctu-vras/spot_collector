@@ -148,6 +148,8 @@ def run_genetic_algorithm(clusters, population_size, num_generations, mutation_r
     plt.ylabel('dist')
     plt.grid(color='gray', linestyle='--', linewidth=0.5)
     plt.show()
+    return x, y
+
 
 def test_funct(centroids):
     global clusters
@@ -160,8 +162,11 @@ def test_funct(centroids):
     # and call the run genetic algorithm
     clusters = generate_cities_from_clusters(len(centroids),centroids)
 
-    run_genetic_algorithm(clusters, POPULATION_SIZE, NUM_GENERATIONS, MUTATION_RATE)
+    x, y = run_genetic_algorithm(clusters, POPULATION_SIZE, NUM_GENERATIONS, MUTATION_RATE)
 
+    val_list = list(clusters.values())
+    new_ordering = []
+    for i in range(len(x)):
+        new_ordering += [[x[i], y[i], centroids[val_list.index((x[i],y[i]))][2]]]
 
-
-
+    return new_ordering

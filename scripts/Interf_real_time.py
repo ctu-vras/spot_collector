@@ -129,8 +129,10 @@ def callback_L_PC(data):
 def _get_optimal_order(event):
     global centroids
     
-    test_funct(centroids)
+    reordered = test_funct(centroids)
     print("Its optimal")
+
+    centroids = reordered  # apply the ordering of the detected objects
 
 def _pub_arm_pose(event):
     # Function to pub each one of the  goal points of clusters to inspect with the arm camera
