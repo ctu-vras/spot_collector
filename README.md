@@ -3,21 +3,22 @@ ROS package for using the Boston Dynamics Spot equiped with the Spot arm for col
 
 This package requires a [custom version](https://github.com/ctu-vras/spot_ros) of the ROS driver for Spot
 
-## Usage
-On the computer connected to the robot, use
+## User Guide
 
-```console
-$ roslaunch spot_collector collector.launch
-```
+> [!NOTE]  
+> Python3 version is requiered since the Open3D library uses it.
 
-The node for detecting graspable objects requires user interface, on another computer equiped with display run
+1. Place the robot in an area with items to collect
+1. Launch custom ROS driver (`roslaunch spot_ros driver.launch`), power on the robot and issue stand command
+1. On the NUC connected to the robot: `roslaunch spot_collector collector.launch`
+1. On another computer with display, launch the user interface: `rosrun spot_collector Interf_real_time.py`
+   
+    The following interface will be opened:
 
-```console
-$ rosrun spot_collector Interf_real_time.py
-```
+    ![User interface](https://github.com/ctu-vras/spot_collector/assets/127795959/74efa64c-006e-4961-b06a-d1b119005bb1)
 
-The following interface will be opened:
-
-![User interface](https://github.com/ctu-vras/spot_collector/assets/127795959/74efa64c-006e-4961-b06a-d1b119005bb1)
-
-In the user interface, set the detection area with the sliders. Afterwards, press button **Remove Ground** to remove points belonging to the ground from the point cloud. Button **Cluster Object Points** runs the detection, new frames will be added to the transformation tree. Visual verification of the objects can be performed with the **Pub Pose Arm Inspect** button. Before grasping, the detected objects can be sorted (button **Order Objects for Grasping**) to make the grasping procedure faster. When the objects are correctly detected, grasp command can be issued with the **Send Grasp Command** button.
+1. With the sliders, set the area in which objects should be collected - the settings can be verified by looking at PointCloud2 published on topic */downsample\_cloud2*. The default configuration delimits an area of 1 square meter, with a maximum of 9x9 around the robot; these parameters can be modified in the script ([Interf_real_time.py](scripts/Interf_real_time.py#L80-L85))
+1. Remove points belonging to ground. It can be either done by setting the limits in the z-axis (with the two sliders) or by pressing the button **Remove ground** or if the environment facilitates a restriction of the minimum value of the z-axis, it would be enough to eliminate the ground and differentiate the clusters.
+1. Detect the individual objects by clustering the remaining points - press button **Cluster Object Points**. New frames will be added to the tf tree. The detected objects can be therefore seen in Rviz.
+1. Before grasping, the objects can be sorted into an optimal sequence with button **Order Objects for Grasping**. The grasp command for all detected objects is sent with the button **Send Grasp Command**. Robot then collects all the detected objects.
+1. If one of the grasps fails, all following grasps are aborted, failure is indicated in the top right corner of the user interface. New detection is required to grasp the remaining objects (start again from step 5.).
