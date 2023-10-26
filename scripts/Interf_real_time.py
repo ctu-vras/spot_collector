@@ -54,6 +54,8 @@ from spot_collector.optimize_route import *
 ##########     VARIABLES
 ################################################################################
 
+rospy.init_node("interface", anonymous=True)
+
 threshold = plt.axes([0.25, 0.05, 0.65, 0.02])
 num_clusters = plt.axes([0.25, 0.10, 0.65, 0.02])
 axdownsample = plt.axes([0.25, 0.25, 0.65, 0.02])
@@ -455,7 +457,6 @@ def update(val):
 def talker():
     global f, pub, pcl_pub, point, point_pose_arm, service
     pub = rospy.Publisher("slider", Float32, queue_size=10)
-    rospy.init_node("talker", anonymous=True)
 
     # call service
     service = rospy.ServiceProxy("/multi_pick_and_place", MultiGrasp)
