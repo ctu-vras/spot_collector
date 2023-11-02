@@ -8,8 +8,11 @@ import numpy as np
 # import time
 from tf import TransformBroadcaster
 import tf2_ros
+import tf2_py as tf2
 from std_msgs.msg import String, Float32
 import itertools
+import genpy
+import ros_numpy
 
 # import math
 
@@ -127,6 +130,44 @@ z_alt = 0
 ##########     FUNCTIONS
 ################################################################################
 nube_local_recibida = PointCloud2()
+
+
+def get_transform(tf_from, tf_to, out="matrix", time=None, dur=0.1):
+    """returns the latest transformation between the given frames
+    the result of multiplying point in frame tf_to by the output matrix is in the frame tf_from
+
+    :param tf_from: find transform from this frame
+    :param tf_to: find transform to this frame
+    :param out: the return type
+                - 'matrix' - returns numpy array with the tf matrix
+                - 'tf' - returns TransformStamped
+    :param time: the desired timestamp of the transform (ROS Time)
+    :param dur: the timeout of the lookup (float)
+    :return: as selected by out parameter or None in case of tf2 exception
+                - only ConnectivityException is logged
+    """
+    if time is None:
+        tf_time = rospy.Time(0)
+    else:
+        if not isinstance(time, rospy.Time) and not isinstance(time, genpy.Time):
+            raise TypeError("parameter time has to be ROS Time")
+        tf_time = time
+
+    try:
+        t = tfBuffer.lookup_transform(tf_from, tf_to, tf_time, rospy.Duration(dur))
+    except (tf2.LookupException, tf2.ExtrapolationException):
+        return None
+    except tf2.ConnectivityException as ex:
+        rospy.logerr(ex)
+        return None
+
+    # return the selected type
+    if out == "matrix":
+        return ros_numpy.numpify(t.transform)
+    elif out == "tf":
+        return t
+    else:
+        raise ValueError("argument out should be 'matrix' or 'tf'")
 
 
 def callback_L_PC(data):
@@ -350,28 +391,22 @@ def update(val):
     # get position of robot in vision frame
     rate = rospy.Rate(10.0)
     while not rospy.is_shutdown():
-        try:
-            trans = tfBuffer.lookup_transform("vision", "body", rospy.Time(0))
-            break
-        except (
-            tf2_ros.LookupException,
-            tf2_ros.ConnectivityException,
-            tf2_ros.ExtrapolationException,
-        ) as ex:
-            rospy.logerr(ex)
+        tf = get_transform("vision", "body")
+        if tf is None:
             rate.sleep()
             continue
+        else:
+            break
 
-    # read new values and apply robot offset
     val_downs = freq.val
     val_rad_out = amplitude.val
     val_nb_out = neib.val
     zmax_val = zmax.val
     zmin_val = zmin.val
-    ymax_val = ymax.val + trans.transform.translation.y
-    ymin_val = ymin.val + trans.transform.translation.y
-    xmax_val = xmax.val + trans.transform.translation.x
-    xmin_val = xmin.val + trans.transform.translation.x
+    ymax_val = ymax.val
+    ymin_val = ymin.val
+    xmax_val = xmax.val
+    xmin_val = xmin.val
     # a = amplitude.val
     # print(val_downs)
 
@@ -383,8 +418,16 @@ def update(val):
         [zmin_val, zmax_val],
     ]  # set the bounds
     bounding_box_points = list(itertools.product(*bounds))  # create limit points
-    bounding_box = o3d.geometry.AxisAlignedBoundingBox.create_from_points(
-        o3d.utility.Vector3dVector(bounding_box_points)
+
+    # apply the offset
+    box_arr = np.vstack((np.array(bounding_box_points).T, np.ones((1, 8))))
+    box_tf = (tf @ box_arr)[:3, :]
+    print(box_arr[:, 0])
+    print(box_tf[:, 0])
+    bounding_box_points_tf = box_tf.T.tolist()
+
+    bounding_box = o3d.geometry.OrientedBoundingBox.create_from_points(
+        o3d.utility.Vector3dVector(bounding_box_points_tf)
     )  # create bounding box object
 
     # Generate new pointCloud in order to publish
