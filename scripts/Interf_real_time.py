@@ -422,8 +422,6 @@ def update(val):
     # apply the offset
     box_arr = np.vstack((np.array(bounding_box_points).T, np.ones((1, 8))))
     box_tf = (tf @ box_arr)[:3, :]
-    print(box_arr[:, 0])
-    print(box_tf[:, 0])
     bounding_box_points_tf = box_tf.T.tolist()
 
     bounding_box = o3d.geometry.OrientedBoundingBox.create_from_points(
