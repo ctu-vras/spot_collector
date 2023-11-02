@@ -397,6 +397,7 @@ def update(val):
             continue
         else:
             break
+    tf[2, 3] = 0.0  # do not apply offset in z
 
     val_downs = freq.val
     val_rad_out = amplitude.val
