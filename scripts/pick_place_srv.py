@@ -196,7 +196,7 @@ class PickPlace:
                 # move the hand above the container
                 r = ArmCartesianTrajectoryRequest()
                 r.root_frame = "body"
-                r.traj_time = 5
+                r.traj_time = 2.0
                 r.poses = self.traj
                 rospy.loginfo("Sending trajectory request")
                 resp = self.trajectory_proxy(r)
@@ -212,7 +212,7 @@ class PickPlace:
                 # move the arm back to front to avoid singular position
                 r = ArmCartesianTrajectoryRequest()
                 r.root_frame = "body"
-                r.traj_time = 5
+                r.traj_time = 2.0
                 r.poses = self.traj[::-1]
                 rospy.loginfo("Sending trajectory request")
                 resp = self.trajectory_proxy(r)
