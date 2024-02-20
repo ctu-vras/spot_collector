@@ -93,22 +93,22 @@ class Interface:
             self.ax_nbout, "neib outliers", 0.0, 100.0, valinit=20.0, valstep=1.0
         )
         self.zmax = Slider(
-            self.ax_zmax, "Z Max", 0.0, 1.0, valinit=0.154, valfmt="%+6.3f"
+            self.ax_zmax, "Z Max", 0.0, 1.0, valinit=0.5, valfmt="%+6.3f"
         )
         self.zmin = Slider(
-            self.ax_zmin, "Z Min", -1.0, 1.0, valinit=-0.157, valfmt="%+6.3f"
+            self.ax_zmin, "Z Min", -1.0, 1.0, valinit=-0.2, valfmt="%+6.3f"
         )
         self.ymax = Slider(
-            self.ax_ymax, "Y Max", -4.0, 5.0, valinit=1.17, valfmt="%+6.3f"
+            self.ax_ymax, "Y Max", -3.0, 3.0, valinit=1.17, valfmt="%+6.3f"
         )
         self.ymin = Slider(
-            self.ax_ymin, "Y Min", -5.0, 4.0, valinit=-0.11, valfmt="%+6.3f"
+            self.ax_ymin, "Y Min", -3.0, 3.0, valinit=-0.11, valfmt="%+6.3f"
         )
         self.xmax = Slider(
-            self.ax_xmax, "X Max", -4.0, 5.0, valinit=1.625, valfmt="%+6.3f"
+            self.ax_xmax, "X Max", -3.0, 3.0, valinit=1.625, valfmt="%+6.3f"
         )
         self.xmin = Slider(
-            self.ax_xmin, "X Min", -5.0, 4.0, valinit=0.192, valfmt="%+6.3f"
+            self.ax_xmin, "X Min", -3.0, 3.0, valinit=0.192, valfmt="%+6.3f"
         )
 
         # add functions to the sliders
