@@ -14,11 +14,11 @@ This package requires a [custom version](https://github.com/ctu-vras/spot_ros) o
 1. On another computer with display, launch the user interface: `rosrun spot_collector Interf_real_time.py`
    
     The following interface will be opened:
+   
+    ![User interface](https://github.com/ctu-vras/spot_collector/assets/127795959/e510dd53-439e-4dd0-997c-f9f864fd94a9)
 
-    ![User interface](https://github.com/ctu-vras/spot_collector/assets/127795959/74efa64c-006e-4961-b06a-d1b119005bb1)
-
-1. With the sliders, set the area in which objects should be collected - the settings can be verified by looking at PointCloud2 published on topic */downsample\_cloud2*. The default configuration delimits an area of 1 square meter, with a maximum of 9x9 around the robot; these parameters can be modified in the script ([Interf_real_time.py](scripts/Interf_real_time.py#L80-L85))
-1. Remove points belonging to ground. It can be either done by setting the limits in the z-axis (with the two sliders) or by pressing the button **Remove ground** or if the environment facilitates a restriction of the minimum value of the z-axis, it would be enough to eliminate the ground and differentiate the clusters.
+1. With the sliders, set the area in which objects should be collected - the settings can be verified by looking at PointCloud2 messages published on topic */detector/points*. The default configuration delimits an area of 1 square meter, with a maximum area of 6 by 6 meters around the robot; the default values and limits can be modified in the script ([interface.py](scripts/interface.py#L86-L112)). It is also possible to use the current values set by the sliders by pressing the **Use current settings** button.
+1. Remove points belonging to ground. It can be either done by setting the limits in the z-axis (with the two sliders) or by pressing the button **Remove ground**.
 1. Detect the individual objects by clustering the remaining points - press button **Cluster Object Points**. New frames will be added to the tf tree. The detected objects can be therefore seen in Rviz.
-1. Before grasping, the objects can be sorted into an optimal sequence with button **Order Objects for Grasping**. The grasp command for all detected objects is sent with the button **Send Grasp Command**. Robot then collects all the detected objects.
+1. Before grasping, the objects can be sorted into an optimal sequence with button **Reorder Objects**. The grasp command for all detected objects is sent with the button **Send Grasp Command**. Robot then collects all the detected objects.
 1. If one of the grasps fails, all following grasps are aborted, failure is indicated in the top right corner of the user interface. New detection is required to grasp the remaining objects (start again from step 5.).
