@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_srvs
   spot_msgs
   pcl_ros
+  message_generation
 )
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system)
@@ -36,21 +37,21 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES spot_collector
 #  CATKIN_DEPENDS rospy std_msgs
-  DEPENDS Eigen
+  DEPENDS EIGEN3
 )
 
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
-  ${Eigen_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIRS}
 )
 
 catkin_install_python(PROGRAMS
     scripts/cloud2grid.py
-    scripts/Interf_real_time.py
     scripts/move_spot_pose.py
     scripts/pick_place_srv.py
     scripts/yolo_garbage_spot.py
+    scripts/interface.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
