@@ -317,6 +317,7 @@ class Interface:
                 va="top",
                 transform=plt.gca().transAxes,
             )
+        self.centroids = []
 
     def _extract_soil(self, event):
         if self.pcd_proc is None:
