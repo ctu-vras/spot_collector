@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import rospy
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.lines as lines
 from matplotlib.widgets import Slider, Button
@@ -60,6 +61,7 @@ class Interface:
         self.inspect_counter = 0
 
         rospy.loginfo("Creating the interface")
+        mpl.rcParams["toolbar"] = "None"
         self.fig = plt.figure(1, figsize=(7, 9))
         self.fig.suptitle("spot_collector controls", fontsize=20)
         # create matplotlib axes
