@@ -5,9 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Status1
-        - /PointCloud21
-        - /PointCloud22
+        - /hand_depth1/Auto Size1
       Splitter Ratio: 0.5
     Tree Height: 802
   - Class: rviz/Selection
@@ -27,7 +25,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: PointCloud2
+    SyncSource: filtered
   - Class: spot_viz/SpotControlPanel
     Name: SpotControlPanel
 Preferences:
@@ -196,23 +194,6 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
-    - Class: rviz/TF
-      Enabled: false
-      Filter (blacklist): ""
-      Filter (whitelist): ""
-      Frame Timeout: 15
-      Frames:
-        All Enabled: true
-      Marker Alpha: 1
-      Marker Scale: 0.25
-      Name: TF
-      Show Arrows: true
-      Show Axes: true
-      Show Names: true
-      Tree:
-        {}
-      Update Interval: 0
-      Value: false
     - Class: rviz/Group
       Displays:
         - Alpha: 1
@@ -400,7 +381,7 @@ Visualization Manager:
     - Class: rviz/InteractiveMarkers
       Enable Transparency: true
       Enabled: false
-      Name: InteractiveMarkers
+      Name: twist
       Show Axes: false
       Show Descriptions: true
       Show Visual Aids: false
@@ -444,8 +425,6 @@ Visualization Manager:
         cluster_2:
           Value: true
         cluster_3:
-          Value: true
-        cluster_4:
           Value: true
         detected_obj:
           Value: false
@@ -610,8 +589,6 @@ Visualization Manager:
                 {}
               cluster_3:
                 {}
-              cluster_4:
-                {}
           gpe:
             {}
       Update Interval: 0
@@ -625,19 +602,19 @@ Visualization Manager:
       Axis: Z
       Channel Name: intensity
       Class: rviz/PointCloud2
-      Color: 211; 215; 207
+      Color: 0; 0; 0
       Color Transformer: FlatColor
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: PointCloud2
+      Name: filtered
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.009999999776482582
+      Size (m): 0.019999999552965164
       Style: Spheres
       Topic: /points/filtered2
       Unreliable: false
@@ -653,28 +630,131 @@ Visualization Manager:
       Axis: Z
       Channel Name: intensity
       Class: rviz/PointCloud2
-      Color: 204; 0; 0
+      Color: 0; 255; 0
       Color Transformer: FlatColor
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: PointCloud2
+      Name: detection
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.029999999329447746
+      Size (m): 0.05999999865889549
       Style: Spheres
       Topic: /detector/points
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Alpha: 1
+      Auto Size:
+        Auto Size Factor: 1
+        Value: true
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/DepthCloud
+      Color: 204; 0; 0
+      Color Image Topic: ""
+      Color Transformer: FlatColor
+      Color Transport Hint: raw
+      Decay Time: 0
+      Depth Map Topic: /spot/depth/hand/image
+      Depth Map Transport Hint: raw
+      Enabled: false
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: hand_depth
+      Occlusion Compensation:
+        Occlusion Time-Out: 30
+        Value: false
+      Position Transformer: XYZ
+      Queue Size: 5
+      Selectable: true
+      Size (Pixels): 3
+      Style: Spheres
+      Topic Filter: true
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: false
+    - Alpha: 0.699999988079071
+      Class: rviz/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: false
+      Name: no_step
+      Topic: /spot/no_step
+      Unreliable: false
+      Use Timestamp: false
+      Value: false
+    - Class: rviz/Image
+      Enabled: false
+      Image Topic: /spot/camera/hand_color/image
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: hand_color
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: false
+    - Class: rviz/Image
+      Enabled: false
+      Image Topic: /spot/camera/frontleft/image
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: frontleft
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: false
+    - Class: rviz/InteractiveMarkers
+      Enable Transparency: true
+      Enabled: false
+      Name: gripper_pose
+      Show Axes: false
+      Show Descriptions: true
+      Show Visual Aids: false
+      Update Topic: /gripper_pose/update
+      Value: false
+    - Class: rviz/Image
+      Enabled: false
+      Image Topic: /spot/camera/back/image
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: back
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: false
+    - Class: rviz/Image
+      Enabled: false
+      Image Topic: /spot/depth/frontleft/image
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Image
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: false
   Enabled: true
   Global Options:
-    Background Color: 46; 52; 54
+    Background Color: 255; 255; 255
     Default Light: true
     Fixed Frame: vision
     Frame Rate: 30
@@ -700,7 +780,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 7.897240161895752
+      Distance: 3.151796579360962
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -708,17 +788,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.39205971360206604
-        Y: 0.0433860644698143
-        Z: -0.27635934948921204
+        X: 0.9070671796798706
+        Y: -1.0329502820968628
+        Z: 1.8732383251190186
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.24979567527771
+      Pitch: 1.1003992557525635
       Target Frame: <Fixed Frame>
-      Yaw: 6.238583087921143
+      Yaw: 6.164074420928955
     Saved: ~
 Window Geometry:
   Displays:
@@ -726,7 +806,9 @@ Window Geometry:
   Height: 1016
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000001680000035ffc0200000013fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d0000035f000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000280020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000fb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006700000002300000018e0000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000fb0000000a0049006d00610067006501000002f4000000ca0000000000000000fb0000000a0049006d00610067006501000002f4000000ca0000000000000000fb0000000a0049006d006100670065000000013f000000660000000000000000fb0000000a0049006d0061006700650000000164000000940000000000000000fb0000000a0049006d00610067006500000001a3000000e80000000000000000fc00000227000001970000000000fffffffa000000000100000002fb0000000a0049006d0061006700650000000000ffffffff0000000000000000fb0000000a0049006d0061006700650000000000000002ad0000000000000000fb0000000a0049006d0061006700650000000249000001530000000000000000fb0000000a0049006d00610067006500000002d4000000c8000000000000000000000001000001b80000035ffc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fc0000003d0000035f000002d60100001cfa000000000100000002fb0000002000530070006f00740043006f006e00740072006f006c00500061006e0065006c0100000000ffffffff000001b800fffffffb0000000a0056006900650077007301000005c8000001b80000010000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000074200000039fc0100000002fb0000000800540069006d0065010000000000000742000003bc00fffffffb0000000800540069006d00650100000000000004500000000000000000000004160000035f00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Image:
+    collapsed: false
+  QMainWindow State: 000000ff00000000fd0000000400000000000001d40000035ffc0200000017fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d0000035f000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000280020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000fb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006700000002300000018e0000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000000000000000fb0000000a0049006d006100670065000000017f000000ca0000001600fffffffb0000000a0049006d00610067006501000002f4000000ca0000000000000000fb0000000a0049006d006100670065000000013f000000660000000000000000fb0000000a0049006d0061006700650000000164000000940000000000000000fb0000000a0049006d00610067006500000001a3000000e80000000000000000fc00000227000001970000000000fffffffa000000000100000002fb0000000a0049006d0061006700650000000000ffffffff0000000000000000fb0000000a0049006d0061006700650000000000000002ad0000000000000000fb0000000a0049006d0061006700650000000249000001530000000000000000fb0000000a0049006d00610067006500000002d4000000c80000000000000000fb0000001400680061006e0064005f0063006f006c006f007200000001e4000001b80000001600fffffffb0000001200660072006f006e0074006c00650066007400000002d4000000c80000001600fffffffb00000008006200610063006b00000002d4000000c80000001600fffffffb0000000a0049006d006100670065000000025400000148000000000000000000000001000001b80000035ffc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fc0000003d0000035f000002d60100001cfa000000000100000002fb0000002000530070006f00740043006f006e00740072006f006c00500061006e0065006c0100000000ffffffff000001b800fffffffb0000000a0056006900650077007301000005c8000001b80000010000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000078000000039fc0100000002fb0000000800540069006d0065010000000000000780000003bc00fffffffb0000000800540069006d00650100000000000004500000000000000000000003e80000035f00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   SpotControlPanel:
@@ -737,6 +819,12 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1858
-  X: 62
+  Width: 1920
+  X: 0
   Y: 27
+  back:
+    collapsed: false
+  frontleft:
+    collapsed: false
+  hand_color:
+    collapsed: false
