@@ -60,37 +60,56 @@ class Interface:
         self.inspect_counter = 0
 
         rospy.loginfo("Creating the interface")
-        self.fig = plt.figure(1)
-        self.fig.suptitle("spot_collector controls")
+        self.fig = plt.figure(1, figsize=(7, 9))
+        self.fig.suptitle("spot_collector controls", fontsize=20)
         # create matplotlib axes
         # sliders
-        self.ax_thres = plt.axes([0.175, 0.15, 0.65, 0.02])
-        self.ax_radius = plt.axes([0.175, 0.25, 0.65, 0.02])
-        self.ax_nbout = plt.axes([0.175, 0.2, 0.65, 0.02])
-        self.ax_zmax = plt.axes([0.175, 0.35, 0.65, 0.02])
-        self.ax_zmin = plt.axes([0.175, 0.30, 0.65, 0.02])
-        self.ax_ymax = plt.axes([0.175, 0.45, 0.65, 0.02])
-        self.ax_ymin = plt.axes([0.175, 0.40, 0.65, 0.02])
-        self.ax_xmax = plt.axes([0.175, 0.55, 0.65, 0.02])
-        self.ax_xmin = plt.axes([0.175, 0.50, 0.65, 0.02])
+        self.ax_xmax = plt.axes([0.23, 0.89, 0.65, 0.02])
+        self.ax_xmin = plt.axes([0.23, 0.865, 0.65, 0.02])
+        self.ax_ymax = plt.axes([0.23, 0.84, 0.65, 0.02])
+        self.ax_ymin = plt.axes([0.23, 0.815, 0.65, 0.02])
+        self.ax_zmax = plt.axes([0.23, 0.79, 0.65, 0.02])
+        self.ax_zmin = plt.axes([0.23, 0.765, 0.65, 0.02])
+        self.ax_radius = plt.axes([0.23, 0.74, 0.65, 0.02])
+        self.ax_nbout = plt.axes([0.23, 0.715, 0.65, 0.02])
+        self.ax_thres = plt.axes([0.23, 0.69, 0.65, 0.02])
+
         # buttons
-        self.ax_crop = plt.axes([0.35, 0.05, 0.3, 0.075])
-        self.ax_clust = plt.axes([0.15, 0.64, 0.33, 0.075])
-        self.ax_save = plt.axes([0.52, 0.64, 0.33, 0.075])
-        self.ax_ground = plt.axes([0.15, 0.74, 0.33, 0.075])
-        self.ax_grasp = plt.axes([0.52, 0.74, 0.33, 0.075])
-        self.ax_insp = plt.axes([0.52, 0.84, 0.33, 0.075])
-        self.ax_order = plt.axes([0.15, 0.84, 0.33, 0.075])
+        self.ax_crop = plt.axes([0.275, 0.61, 0.45, 0.075])
+        #
+        self.ax_clust = plt.axes([0.03, 0.47, 0.45, 0.075])
+        self.ax_save = plt.axes([0.52, 0.47, 0.45, 0.075])
+        self.ax_ground = plt.axes([0.03, 0.39, 0.45, 0.075])
+        self.ax_insp = plt.axes([0.52, 0.39, 0.45, 0.075])
+        self.ax_order = plt.axes([0.03, 0.31, 0.45, 0.075])
+        #
+        self.ax_detect = plt.axes([0.275, 0.165, 0.45, 0.075])
+        #
+        self.ax_grasp = plt.axes([0.275, 0.03, 0.45, 0.075])
+
+        # texts
+        self.ax_label1 = plt.axes([0.03, 0.92, 0.65, 0.05])
+        self.ax_label1.axis("off")
+        self.ax_label2a = plt.axes([0.03, 0.56, 0.65, 0.05])
+        self.ax_label2a.axis("off")
+        self.ax_label2b = plt.axes([0.03, 0.26, 0.65, 0.05])
+        self.ax_label2b.axis("off")
+        self.ax_label3 = plt.axes([0.03, 0.12, 0.65, 0.05])
+        self.ax_label3.axis("off")
+        self.ax_label1.text(x=0, y=0, s="1. Set parameters", fontsize=20)
+        self.ax_label2a.text(x=0, y=0, s="2.a Manual controls", fontsize=20)
+        self.ax_label2b.text(x=0, y=0, s="2.b Automatic detection", fontsize=20)
+        self.ax_label3.text(x=0, y=0, s="3. Start grasping procedure", fontsize=20)
 
         # create the sliders
         self.threshold_slider = Slider(
             self.ax_thres, "threshold vol", 0.0, 500.0, valinit=80.0, valstep=1.0
         )
         self.radius = Slider(
-            self.ax_radius, "radius outliers", 0, 5.0, valinit=1.0, valfmt="%5.3f"
+            self.ax_radius, "DBSCAN: radius", 0, 5.0, valinit=1.0, valfmt="%5.3f"
         )
         self.neib = Slider(
-            self.ax_nbout, "neib outliers", 0.0, 100.0, valinit=20.0, valstep=1.0
+            self.ax_nbout, "DBSCAN: neighbours", 0.0, 100.0, valinit=20.0, valstep=1.0
         )
         self.zmax = Slider(
             self.ax_zmax, "Z Max", 0.0, 1.0, valinit=0.5, valfmt="%+6.3f"
@@ -124,29 +143,41 @@ class Interface:
 
         # create the buttons
         self.crop_but = Button(
-            self.ax_crop, "Use Current Settings", color="white", hovercolor="green"
+            self.ax_crop, "Use Current Settings", color="silver", hovercolor="green"
         )
+        self.crop_but.label.set_fontsize(18)
+        self.detect_but = Button(
+            self.ax_detect, "Detect", color="silver", hovercolor="green"
+        )
+        self.detect_but.label.set_fontsize(18)
         self.cluster_but = Button(
-            self.ax_clust, "Cluster Object Points", color="white", hovercolor="green"
+            self.ax_clust, "Cluster Object Points", color="silver", hovercolor="green"
         )
+        self.cluster_but.label.set_fontsize(18)
         self.save_but = Button(
-            self.ax_save, "Save Point Cloud", color="white", hovercolor="green"
+            self.ax_save, "Save Point Cloud", color="silver", hovercolor="navy"
         )
+        self.save_but.label.set_fontsize(18)
         self.ground_but = Button(
-            self.ax_ground, "Remove ground", color="white", hovercolor="green"
+            self.ax_ground, "Remove ground", color="silver", hovercolor="green"
         )
+        self.ground_but.label.set_fontsize(18)
         self.grasp_but = Button(
-            self.ax_grasp, "Send Grasp Command", color="white", hovercolor="red"
+            self.ax_grasp, "Send Grasp Command", color="silver", hovercolor="red"
         )
+        self.grasp_but.label.set_fontsize(18)
         self.inspect_but = Button(
-            self.ax_insp, "Inspect object", color="white", hovercolor="red"
+            self.ax_insp, "Inspect object", color="silver", hovercolor="red"
         )
+        self.inspect_but.label.set_fontsize(18)
         self.order_but = Button(
-            self.ax_order, "Reorder Objects", color="white", hovercolor="yellow"
+            self.ax_order, "Reorder Objects", color="silver", hovercolor="yellow"
         )
+        self.order_but.label.set_fontsize(18)
 
         # add functions to the buttons
         self.crop_but.on_clicked(self._bbox)
+        self.detect_but.on_clicked(self._all_in_one)
         self.cluster_but.on_clicked(self._cluster)
         self.save_but.on_clicked(self._save_point_cloud)
         self.ground_but.on_clicked(self._extract_soil)
@@ -154,9 +185,15 @@ class Interface:
         self.inspect_but.on_clicked(self._inspect)
         self.order_but.on_clicked(self._get_optimal_order)
 
-        # add horizontal line between the sliders and buttons
+        # add horizontal line between sections of UI
         self.fig.add_artist(
-            lines.Line2D([0.02, 0.98], [0.61, 0.61], linewidth=1, color="black")
+            lines.Line2D([0.02, 0.98], [0.6, 0.6], linewidth=2, color="black")
+        )
+        self.fig.add_artist(
+            lines.Line2D([0.02, 0.98], [0.3, 0.3], linewidth=2, color="black")
+        )
+        self.fig.add_artist(
+            lines.Line2D([0.02, 0.98], [0.155, 0.155], linewidth=2, color="black")
         )
 
         rospy.loginfo("Interface started")
@@ -438,6 +475,15 @@ class Interface:
         scaled_polygon_pcl = pc2.create_cloud_xyz32(header, o3d_pointcloud.points)
 
         self.pcd_pub.publish(scaled_polygon_pcl)
+
+    def _all_in_one(self, event):
+        self._bbox(None)
+        rospy.sleep(0.1)
+        self._extract_soil(None)
+        rospy.sleep(0.1)
+        self._cluster(None)
+        rospy.sleep(0.1)
+        self._get_optimal_order(None)
 
     def pcd_callback(self, msg: PointCloud2):
         self.pcd_raw = np.transpose(
