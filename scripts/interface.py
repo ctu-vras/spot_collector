@@ -240,7 +240,15 @@ class Interface:
             raise ValueError("argument out should be 'matrix' or 'tf'")
 
     def _get_optimal_order(self, event):
-        reordered = test_funct(self.centroids)
+        l = len(self.centroids)
+        if l == 0:
+            rospy.logerr("No objects detected, cannot reorder them")
+            return
+        elif l == 1:
+            # no action required
+            reordered = self.centroids
+        else:
+            reordered = test_funct(self.centroids)
         self.centroids = reordered  # apply the ordering of the detected objects
 
         # plot the result
@@ -319,6 +327,9 @@ class Interface:
         self.inspect_counter %= self.num_objects
 
     def _grasp(self, event):
+        if len(self.centroids) == 0:
+            rospy.logerr("Grasp command requested, but no objects were detected")
+            return
         rospy.loginfo("Sending grasp request to Spot")
 
         points = []
@@ -359,6 +370,7 @@ class Interface:
         self.centroids = []
 
     def _extract_soil(self, event):
+        self.centroids = []
         if self.pcd_proc is None:
             return
 
@@ -424,6 +436,7 @@ class Interface:
         )
 
     def _bbox(self, event):
+        self.centroids = []  # reset the detections
         val_rad_out = self.radius.val
         val_nb_out = self.neib.val
         zmax = self.zmax.val
